@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防抖</title>
+</head>
+<body>
+    <script>
+        /*
+        对于高频触发的函数，我们并不想频发触发事件，比如说搜索框实时发请求，onmousemove, resize, onscroll等等，这个时候就需要对函数增加防抖功能了
+        */
+    </script>
+    <div id="content" style="height:150px;line-height:150px;text-align:center; color: #fff;background-color:#ccc;font-size:80px;"></div>
+    <script>
+        let num = 1;
+        let content = document.getElementById('content');
+    
+        function count() {
+            content.innerHTML = num++;
+        };
+        content.onmousemove = fangdou(count,1000,true);
+    
+        // //fn：防抖的函数           //wait：需要延迟的时间
+        // function debounce(fn, wait) {
+        //     //定时器，用来setTimeout
+        //     let timeout;
+        //
+        //     //返回一个函数，这个函数会在一个时间区间结束后的wait毫秒时执行fn函数
+        //     return function () {
+        //
+        //         //保存函数调用时候的上下文和参数，传递给fn
+        //         let context = this;
+        //         let args = arguments;
+        //
+        //         // 每次这个返回的函数被调用，就清除定时器，以保证不执行 fn
+        //         if (timeout){
+        //             clearTimeout(timeout);
+        //         }
+        //
+        //         // 当返回的函数被最后一次调用后（也就是用户停止了某个连续的操作），
+        //         // 再过 delay 毫秒就执行 fn
+        //         timeout = setTimeout(() => {
+        //             fn.apply(context, args)
+        //         }, wait);
+        //     }
+        // }
+    
+        // //未立即执行版本
+        // function fangdou(fn,wait){
+        //     let timeout;
+        //     return ()=>{
+        //         let context=this;
+        //         let args=arguments;
+        //         clearTimeout(timeout);
+        //         timeout=setTimeout(()=>{
+        //             fn.apply(context,args)
+        //         },wait)
+        //     }
+        // }
+    
+    
+        //完整版本(未立即执行和立即执行都在里边)
+        function fangdou(fn,wait,immediate){
+            let timeout;
+            return ()=>{
+                let context=this;
+                let args=arguments;
+                clearTimeout(timeout);
+                if(immediate){
+                    let callNow=!timeout;
+                    if(callNow){
+                        fn.apply(context,args);
+                    }
+                    timeout=setTimeout(()=>{
+                        timeout=null
+                    },wait)
+                }else {
+                    timeout=setTimeout(()=>{
+                        fn.apply(context,args)
+                    },wait)
+                }
+            }
+        }
+    </script>
+    
+</body>
+</html>

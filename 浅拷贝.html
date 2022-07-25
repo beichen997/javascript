@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浅拷贝</title>
+</head>
+
+<body>
+    <script>
+        /*
+        浅拷贝会创建一个新的对象，这个对象有着原始对象属性值的一份精准拷贝：
+
+        如果原始对象属性类型为基本类型，拷贝的就是基本类型的值，因此修改原、新对象的基本类型属性互不影响
+        如果原始对象属性类型为引用类型，拷贝的就是内存地址（或指向该地址的指针），因此修改原、新对象的引用类型属性会相互影响
+        */
+        /**
+         * 实现浅拷贝的方式
+         * 1。 Object.assign（）：该方法将所有可枚举的自身属性从一个或多个源对象复制到目标对象。它返回目标对象。
+         * Object.assign(新对象, ...源对象)
+         * var obj1 = { a: 1, b: 2 }
+
+            var obj2 = Object.assign({}, obj1)
+
+            obj2.a = 4
+
+            console.log(obj1, obj2)
+        */
+        /**
+        * 实现浅拷贝的方式
+        *2.解构赋值
+        * es6新特性
+        * var obj1 = { a: 1, b: 2 }
+
+       var obj2 = { ...obj1 }
+
+       obj2.a = 4
+
+       console.log(obj1, obj2)
+    
+       */
+      // 3. Array.Prototype.concat（）：该方法用于合并两个或多个数组。此方法不会更改现有数组，而是返回一个新数组。
+
+        let arr2=arr.concat();    //将arr浅拷贝，生成arr2
+        // 4. Array.Prototype.slice（）：该方法返回一个新的副本对象，该对象是一个由 begin和end决定的原先的浅拷贝（包括begin，不包括end，左闭右开）。原始序列不会被改变。
+        let arr = [1, 3,  {username: 'kobe'}    ];
+        let arr3 = arr.slice();  //将arr浅拷贝到arr3
+        arr3[2].username = 'wade'
+        console.log(arr);     //wade
+
+        // 5.自定义函数法，只拷贝一层
+        function clone(origin) {
+            // 1、推荐在循环对象属性的时候使用 for...in，在遍历数组的时候的时候使用 for...of 
+            // 2、for...in 循环出的是 key，for...of 循环出的是 value 
+            // 3、注意，for...of 是 ES6 新引入的特性。修复了 ES5 引入的 for...in 的不足 
+            // 4、for...of 不能循环普通的对象（如通过构造函数创造的），需要通过和 Object.keys()搭配使用
+            var result = {};
+            for (var prop in origin) {
+                if (origin.hasOwnProperty(prop)) {
+                    result[prop] = origin[prop];
+                }
+            }
+            return result;
+        }
+
+        var jay = {
+            name: "jayChou",
+            age: 40,
+            family: {
+                wife: "Quinlivan"
+            }
+        }
+
+        var otherJay = clone(jay);
+
+        otherJay.age = 18;
+        otherJay.family.wife = "otherGirl";
+
+        console.log(jay);
+        // 
+        // {
+        //   name: "jayChou",
+        //   age: 40,  // 没被改变
+        //   family: {
+        //     wife: "otherGirl"  // 同时被改变，说明是同一个引用
+        //   }
+        // }
+
+        console.log(otherJay);
+
+        // 
+        // {
+        //   name: "jayChou",
+        //   age: 18,
+        //   family: {
+        //     wife: "otherGirl"  // 被改变了
+        //   }
+        // }
+    </script>
+
+</body>
+
+</html>
